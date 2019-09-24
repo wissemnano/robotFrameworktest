@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot rpa="false" generated="20190924 16:44:56.755" generator="Robot 3.1.2 (Python 2.7.15 on win32)">
+<suite source="D:\wissem\framework\robotFrameworktest\robot\tests\simpletest.robot" id="s1" name="Simpletest">
+<test id="s1-t1" name="Search Test Text">
+<kw name="Open Chrome">
+<tags>
+<tag>Acceptances</tag>
+</tags>
+<doc>Test Case more Info here</doc>
+<kw name="Open Browser" library="Selenium2Library">
+<doc>Opens a new browser instance to the given ``url``.</doc>
+<arguments>
+<arg>${URL}</arg>
+<arg>${BROWSER}</arg>
+</arguments>
+<msg timestamp="20190924 16:44:56.960" level="INFO">Opening browser 'chrome' to base url 'https://www.google.com'.</msg>
+<status status="PASS" endtime="20190924 16:45:01.652" starttime="20190924 16:44:56.959"></status>
+</kw>
+<kw name="Maximize Browser Window" library="Selenium2Library">
+<doc>Maximizes current browser window.</doc>
+<status status="PASS" endtime="20190924 16:45:02.775" starttime="20190924 16:45:01.652"></status>
+</kw>
+<status status="PASS" endtime="20190924 16:45:02.775" starttime="20190924 16:44:56.959"></status>
+</kw>
+<kw name="Searching For Text">
+<kw name="Input Text" library="Selenium2Library">
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<arguments>
+<arg>xpath=${InputText}</arg>
+<arg>${txtSearch}</arg>
+</arguments>
+<msg timestamp="20190924 16:45:02.777" level="INFO">Typing text 'robot framework' into text field 'xpath=//*[@id="tsf"]/div[2]/div[1]/div[1]/div/div[2]/input'.</msg>
+<status status="PASS" endtime="20190924 16:45:02.916" starttime="20190924 16:45:02.776"></status>
+</kw>
+<kw name="Click Element" library="Selenium2Library">
+<doc>Click the element identified by ``locator``.</doc>
+<arguments>
+<arg>xpath=${btnSearch}</arg>
+</arguments>
+<msg timestamp="20190924 16:45:02.916" level="INFO">Clicking element 'xpath=//*[@id="tsf"]/div[2]/div[1]/div[3]/center/input[1]'.</msg>
+<status status="PASS" endtime="20190924 16:45:08.483" starttime="20190924 16:45:02.916"></status>
+</kw>
+<kw name="Sleep" library="BuiltIn">
+<doc>Pauses the test executed for the given time.</doc>
+<arguments>
+<arg>1s</arg>
+</arguments>
+<msg timestamp="20190924 16:45:09.487" level="INFO">Slept 1 second</msg>
+<status status="PASS" endtime="20190924 16:45:09.487" starttime="20190924 16:45:08.484"></status>
+</kw>
+<status status="PASS" endtime="20190924 16:45:09.487" starttime="20190924 16:45:02.776"></status>
+</kw>
+<kw name="CLose Chrome Browser">
+<kw name="Close Browser" library="Selenium2Library">
+<doc>Closes the current browser.</doc>
+<status status="PASS" endtime="20190924 16:45:11.683" starttime="20190924 16:45:09.487"></status>
+</kw>
+<status status="PASS" endtime="20190924 16:45:11.684" starttime="20190924 16:45:09.487"></status>
+</kw>
+<status status="PASS" endtime="20190924 16:45:11.686" critical="yes" starttime="20190924 16:44:56.958"></status>
+</test>
+<status status="PASS" endtime="20190924 16:45:11.697" starttime="20190924 16:44:56.757"></status>
+</suite>
+<statistics>
+<total>
+<stat fail="0" pass="1">Critical Tests</stat>
+<stat fail="0" pass="1">All Tests</stat>
+</total>
+<tag>
+</tag>
+<suite>
+<stat fail="0" id="s1" name="Simpletest" pass="1">Simpletest</stat>
+</suite>
+</statistics>
+<errors>
+</errors>
+</robot>
