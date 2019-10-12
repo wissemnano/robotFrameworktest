@@ -4,3 +4,4 @@ libHTML/
 test/variables/results/
 test/boucle_and_variables/results/
 results/
+test/python/__pycache__/
