@@ -5,3 +5,5 @@ test/variables/results/
 test/boucle_and_variables/results/
 results/
 test/python/__pycache__/
+*/__pycache__/
+/__pycache__/
