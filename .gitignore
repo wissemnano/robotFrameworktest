@@ -7,3 +7,5 @@ results/
 test/python/__pycache__/
 */__pycache__/
 /__pycache__/
+RobotSagemCom/results
+RobotSagemCom/testLibrary
