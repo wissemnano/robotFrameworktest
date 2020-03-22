@@ -1,3 +1,11 @@
+######################################################################
+#######         Developper : Mansouri WISSEM
+#######         This script is developped to used in robot framework script
+#######         To create and insert data into an xlsx file
+#######         There is many way to use this script
+#######         
+######################################################################
+
 import  os
 import  sys
 from openpyxl.styles import Color, PatternFill, Font, Border, Side
@@ -6,6 +14,7 @@ from openpyxl import load_workbook , Workbook
 
 
 class Results():
+    # Initialise the class
     def __init__(self , fileName=None , sheetName=None):
         # initialise same data
         self.fileName   =   fileName
@@ -70,13 +79,28 @@ class Results():
     def saveDataInFile(self):
         self.myBook.save(filename=self.fileName)
     
+    # Function to delete a specific sheet in xlsx file
     def removeSheetByName(self , sheetFineName , workbookName):
         sheetsNames =   workbookName.sheetnames
         if sheetFineName in sheetsNames:
             print ("Delete Sheet")
             workbookName.remove(workbookName[sheetFineName])
 
+    # This function used to adjust a specific cell (col) in th e active sheet file
+    def Adjust_Cell(self , cellName , cellSize):
+        if self.mySheet[cellName] != None:
+            self.mySheet.column_dimensions[self.mySheet[cellName].column_letter].width=cellSize
+            self.saveDataInFile()
 
+    # this function used to create the sheet header
+    def Create_Header_file(self, **kwargs):
+        for key , value in kwargs.items():
+            print ("{} == {}".format(key , value))
+            strKey     =   str(key)
+            self.mySheet[strKey]   =   value
+            self.saveDataInFile()
+    
+    
     ################## FU Tests ##########
     ##  FU : Boot
     ##  FU : Periodic Check
@@ -91,17 +115,32 @@ class Results():
         #self.mySheet['F1']="ExpectedResults"
         self.mySheet['E1']="Result"
         self.mySheet['F1']="Comments"
+        self.saveDataInFile()
     
+    def Adjust_Test_File(self):
+        self.Adjust_Cell('A1' , 20)
+        self.Adjust_Cell('B1' , 20)
+        self.Adjust_Cell('C1' , 20)
+        self.Adjust_Cell('D1' , 45)
+        self.Adjust_Cell('E1' , 15)
+        self.Adjust_Cell('F1' , 45)
+
     def Write_Fu_Test_Result_File(self):
-        pass
+        self.Write_Head_Fu_Test_File()
+        self.Adjust_Test_File()
+        #self.saveDataInFile()
 
 
 if __name__ == "__main__":
     currentPath =   os.getcwd()
     currentPath =   currentPath.replace('\\' , '/')
     print (currentPath)
-    
+
     pathFolder  =   currentPath+"/RobotSagemCom/testLibrary/"
     firstFile   =   pathFolder+"testInPythonScript.xlsx"
     firstResults =  Results(firstFile , "Results")
+    #keyHeader       =   {"A1":"First" , "B1" : "Second"}
+    
     firstResults.create_file()
+    #firstResults.Create_Header_file(A1="First" , B1="Second")
+    #firstResults.Write_Fu_Test_Result_File()
