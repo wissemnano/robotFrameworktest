@@ -2,7 +2,7 @@ import time
 from openpyxl.styles import Color, PatternFill, Font, Border, Side
 from openpyxl.worksheet.dimensions  import Dimension
 from openpyxl import load_workbook , Workbook
-
+import os
 
 workbook    =   None
 wb          =   None
@@ -177,5 +177,13 @@ def writeTestSuiteInfo(xlsxfile , TestSuite=None , TestCase=None , Summary=None 
 
 if __name__ == '__main__':
     #writeinXlsxfile("test.xlsx")
+    currentPath =   os.getcwd()
+    print (currentPath)
+    """
     fileTest    =   "testLibrary/pythonTest.xlsx"
-    writeTestSuiteInfo(xlsxfile=fileTest , TestSuite="FU" , TestCase="Case" , Summary="None" , Step="None, reyfeyrfr ,frefrfre,ferfrefref,frefref" , Result="ok")
+    writeTestSuiteInfo(xlsxfile=fileTest , TestSuite="FU" , 
+        TestCase="Case" , Summary="None" , 
+        Step="None, reyfeyrfr ,frefrfre,ferfrefref,frefref" , 
+        Result="ok"
+        )
+    """

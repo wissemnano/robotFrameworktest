@@ -97,7 +97,11 @@ class Results():
 
 
 if __name__ == "__main__":
-    pathFolder  = "C:/Users/MANSOURI/Desktop/workspace/RobotSagemCom/testLibrary/"
-    firstFile   =   pathFolder+"firstResult.xlsx"
-    firstResults = Results(firstFile , "Results")
+    currentPath =   os.getcwd()
+    currentPath =   currentPath.replace('\\' , '/')
+    print (currentPath)
+    
+    pathFolder  =   currentPath+"/RobotSagemCom/testLibrary/"
+    firstFile   =   pathFolder+"testInPythonScript.xlsx"
+    firstResults =  Results(firstFile , "Results")
     firstResults.create_file()
