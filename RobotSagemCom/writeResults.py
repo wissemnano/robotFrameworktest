@@ -177,4 +177,5 @@ def writeTestSuiteInfo(xlsxfile , TestSuite=None , TestCase=None , Summary=None 
 
 if __name__ == '__main__':
     #writeinXlsxfile("test.xlsx")
-    writeTestSuiteInfo(xlsxfile="xlsxfile.xlsx" , TestSuite="FU" , TestCase="Case" , Summary="None" , Step="None, reyfeyrfr ,frefrfre,ferfrefref,frefref" , Result="ok")
+    fileTest    =   "testLibrary/pythonTest.xlsx"
+    writeTestSuiteInfo(xlsxfile=fileTest , TestSuite="FU" , TestCase="Case" , Summary="None" , Step="None, reyfeyrfr ,frefrfre,ferfrefref,frefref" , Result="ok")

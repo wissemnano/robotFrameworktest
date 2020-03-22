@@ -7,9 +7,26 @@ from openpyxl import load_workbook , Workbook
 
 class Results():
     def __init__(self , fileName=None , sheetName=None):
+        # initialise same data
         self.fileName   =   fileName
         self.sheetName  =   sheetName
         print ("Call Result Class")
+        # config sheet file :
+        # add same style
+        self.bold_font      = Font(bold=True)
+        self.thin_border    = Border(left=Side(style='thin'), 
+            right=Side(style='thin'), 
+            top=Side(style='thin'), 
+            bottom=Side(style='thin')
+            )
+        self.defaultFill    = PatternFill(start_color='d3d3d3', 
+            end_color='d3d3d3', 
+            fill_type='solid'
+            )
+        self.greenFill      = PatternFill(start_color='0cff0c',
+            end_color='0cff0c',
+            fill_type='solid'
+            )
 
     #create or open file
     def create_file(self):
@@ -58,6 +75,26 @@ class Results():
         if sheetFineName in sheetsNames:
             print ("Delete Sheet")
             workbookName.remove(workbookName[sheetFineName])
+
+
+    ################## FU Tests ##########
+    ##  FU : Boot
+    ##  FU : Periodic Check
+    ######################################
+    # Create insert function in FU Test
+    def Write_Head_Fu_Test_File(self):
+        self.mySheet['A1']="TestSuite"
+        self.mySheet['B1']="TestCase"
+        self.mySheet['C1']="Summary"
+        #self.mySheet['D1']="Preconditions"
+        self.mySheet['D1']="Step"
+        #self.mySheet['F1']="ExpectedResults"
+        self.mySheet['E1']="Result"
+        self.mySheet['F1']="Comments"
+    
+    def Write_Fu_Test_Result_File(self):
+        pass
+
 
 if __name__ == "__main__":
     pathFolder  = "C:/Users/MANSOURI/Desktop/workspace/RobotSagemCom/testLibrary/"

@@ -2,9 +2,9 @@
 
 
 *** Variable ***
-${xlsxLibrary}                      C:\\Users\\MANSOURI\\Desktop\\workspace\\RobotSagemCom\\LIBRARY\\Results.py
-${firstFile}                        C:\\Users\\MANSOURI\\Desktop\\workspace\\RobotSagemCom\\testLibrary\\firstTestLib.xlsx
-${secondFile}                       C:\\Users\\MANSOURI\\Desktop\\workspace\\RobotSagemCom\\testLibrary\\secondTestLib.xlsx
+${xlsxLibrary}                      LIBRARY\\Results.py
+${firstFile}                        testLibrary\\firstTestLib.xlsx
+${secondFile}                       testLibrary\\secondTestLib.xlsx
 *** Test Case ***
 Example
     Import Library                  ${xlsxLibrary}      ${firstFile}        WITH NAME   FirstLib
