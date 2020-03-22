@@ -50,7 +50,7 @@ class Results():
         #Get all sheet in the file
         sheetsNames =   myBook.sheetnames
         print (sheetsNames)
-        
+
         # crate the specific sheet file
         if self.sheetName == None:
             mySheet = myBook.create_sheet("Results")
@@ -66,47 +66,51 @@ class Results():
                 mySheet = myBook.create_sheet(self.sheetName)
 
         #Delete default sheet name
-        self.removeSheetByName("Sheet" , myBook)
+        self.remove_sheet_by_name("Sheet" , myBook)
 
         # Create Sheet And Workbook
         self.mySheet    =   mySheet
         self.myBook     =   myBook
-        
+
         #Save file
-        self.saveDataInFile()
-    
+        self.save_data_in_file()
+
     # Function Save file
-    def saveDataInFile(self):
+    def save_data_in_file(self):
         self.myBook.save(filename=self.fileName)
-    
+
     # Function to delete a specific sheet in xlsx file
-    def removeSheetByName(self , sheetFineName , workbookName):
+    def remove_sheet_by_name(self , sheetFineName , workbookName):
         sheetsNames =   workbookName.sheetnames
         if sheetFineName in sheetsNames:
             print ("Delete Sheet")
             workbookName.remove(workbookName[sheetFineName])
 
     # This function used to adjust a specific cell (col) in th e active sheet file
-    def Adjust_Cell(self , cellName , cellSize):
+    def adjust_cell(self , cellName , cellSize):
         if self.mySheet[cellName] != None:
             self.mySheet.column_dimensions[self.mySheet[cellName].column_letter].width=cellSize
-            self.saveDataInFile()
+            self.save_data_in_file()
 
     # this function used to create the sheet header
-    def Create_Header_file(self, **kwargs):
+    def create_header_file(self, **kwargs):
         for key , value in kwargs.items():
             print ("{} == {}".format(key , value))
             strKey     =   str(key)
             self.mySheet[strKey]   =   value
-            self.saveDataInFile()
-    
-    
+            self.save_data_in_file()
+
+    # insert data in specific cell
+    def insert_data_in_cell(self, cellName , data):
+        self.mySheet[cellName]  =   data
+        self.save_data_in_file()
+
     ################## FU Tests ##########
     ##  FU : Boot
     ##  FU : Periodic Check
     ######################################
     # Create insert function in FU Test
-    def Write_Head_Fu_Test_File(self):
+    def write_head_fu_test_file(self):
         self.mySheet['A1']="TestSuite"
         self.mySheet['B1']="TestCase"
         self.mySheet['C1']="Summary"
@@ -115,32 +119,32 @@ class Results():
         #self.mySheet['F1']="ExpectedResults"
         self.mySheet['E1']="Result"
         self.mySheet['F1']="Comments"
-        self.saveDataInFile()
-    
-    def Adjust_Test_File(self):
-        self.Adjust_Cell('A1' , 20)
-        self.Adjust_Cell('B1' , 20)
-        self.Adjust_Cell('C1' , 20)
-        self.Adjust_Cell('D1' , 45)
-        self.Adjust_Cell('E1' , 15)
-        self.Adjust_Cell('F1' , 45)
+        self.save_data_in_file()
 
-    def Write_Fu_Test_Result_File(self):
-        self.Write_Head_Fu_Test_File()
-        self.Adjust_Test_File()
-        #self.saveDataInFile()
+    def adjust_test_file(self):
+        self.adjust_cell('A1' , 20)
+        self.adjust_cell('B1' , 20)
+        self.adjust_cell('C1' , 20)
+        self.adjust_cell('D1' , 45)
+        self.adjust_cell('E1' , 15)
+        self.adjust_cell('F1' , 45)
+
+    def write_fu_test_result_file(self):
+        self.write_head_fu_test_file()
+        self.adjust_test_file()
+        #self.save_data_in_file()
 
 
 if __name__ == "__main__":
-    currentPath =   os.getcwd()
-    currentPath =   currentPath.replace('\\' , '/')
+    currentPath     =   os.getcwd()
+    currentPath     =   currentPath.replace('\\' , '/')
     print (currentPath)
 
-    pathFolder  =   currentPath+"/RobotSagemCom/testLibrary/"
-    firstFile   =   pathFolder+"testInPythonScript.xlsx"
-    firstResults =  Results(firstFile , "Results")
-    #keyHeader       =   {"A1":"First" , "B1" : "Second"}
-    
+    pathFolder      =   currentPath+"/RobotSagemCom/testLibrary/"
+    firstFile       =   pathFolder+"testInPythonScript.xlsx"
+    firstResults    =  Results(firstFile , "Results")
+    #keyHeader      =   {"A1":"First" , "B1" : "Second"}
+
     firstResults.create_file()
-    #firstResults.Create_Header_file(A1="First" , B1="Second")
-    #firstResults.Write_Fu_Test_Result_File()
+    #firstResults.create_header_file(A1="First" , B1="Second")
+    #firstResults.write_fu_test_result_file()
