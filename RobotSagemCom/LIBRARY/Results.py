@@ -8,7 +8,7 @@
 
 import  os
 import  sys
-from openpyxl.styles import Color, PatternFill, Font, Border, Side
+from openpyxl.styles import Color, PatternFill, Font, Border, Side , Alignment
 from openpyxl.worksheet.dimensions  import Dimension
 from openpyxl import load_workbook , Workbook
 
@@ -36,7 +36,7 @@ class Results():
             end_color='0cff0c',
             fill_type='solid'
             )
-
+        self.center_aligned_text = Alignment(horizontal="center")
     #create or open file
     def create_file(self):
         #if file exist open it
@@ -97,12 +97,12 @@ class Results():
         for key , value in kwargs.items():
             print ("{} == {}".format(key , value))
             strKey     =   str(key)
-            self.mySheet[strKey]   =   value
-            self.save_data_in_file()
+            self.insert_data_in_cell(strKey , value)
 
     # insert data in specific cell
     def insert_data_in_cell(self, cellName , data):
-        self.mySheet[cellName]  =   data
+        self.mySheet[cellName]          =   data
+        self.mySheet[cellName].border   =   self.thin_border
         self.save_data_in_file()
 
     ################## FU Tests ##########
@@ -119,7 +119,15 @@ class Results():
         #self.mySheet['F1']="ExpectedResults"
         self.mySheet['E1']="Result"
         self.mySheet['F1']="Comments"
+        #Set Border style , header Style
+        for header in self.mySheet['A1:F1']:
+            for col in header:
+                col.border      =   self.thin_border
+                col.fill        =   self.defaultFill
+                col.font        =   self.bold_font
+                col.alignment   =   self.center_aligned_text
         self.save_data_in_file()
+
 
     def adjust_test_file(self):
         self.adjust_cell('A1' , 20)
@@ -129,11 +137,13 @@ class Results():
         self.adjust_cell('E1' , 15)
         self.adjust_cell('F1' , 45)
 
-    def write_fu_test_result_file(self):
+    def create_fu_test_result_file(self):
         self.write_head_fu_test_file()
         self.adjust_test_file()
         #self.save_data_in_file()
 
+    def insert_fu_result(self):
+        pass
 
 if __name__ == "__main__":
     currentPath     =   os.getcwd()
@@ -142,9 +152,9 @@ if __name__ == "__main__":
 
     pathFolder      =   currentPath+"/RobotSagemCom/testLibrary/"
     firstFile       =   pathFolder+"testInPythonScript.xlsx"
-    firstResults    =  Results(firstFile , "Results")
+    firstResults    =   Results(firstFile , "Results")
     #keyHeader      =   {"A1":"First" , "B1" : "Second"}
 
     firstResults.create_file()
+    firstResults.create_fu_test_result_file()
     #firstResults.create_header_file(A1="First" , B1="Second")
-    #firstResults.write_fu_test_result_file()
