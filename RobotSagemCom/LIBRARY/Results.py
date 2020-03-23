@@ -6,12 +6,13 @@
 #######         
 ######################################################################
 
+import time
 import  os
 import  sys
 from openpyxl.styles import Color, PatternFill, Font, Border, Side , Alignment
 from openpyxl.worksheet.dimensions  import Dimension
 from openpyxl import load_workbook , Workbook
-
+import string
 
 class Results():
     # Initialise the class
@@ -37,6 +38,8 @@ class Results():
             fill_type='solid'
             )
         self.center_aligned_text = Alignment(horizontal="center")
+        self.listAlpha   =   string.ascii_uppercase
+        self.numberList   =   ['0' , '1' , '2' , '3' , '4' , '5','6', '7' , '8' , '9']
     #create or open file
     def create_file(self):
         #if file exist open it
@@ -93,17 +96,107 @@ class Results():
             self.save_data_in_file()
 
     # this function used to create the sheet header
-    def create_header_file(self, **kwargs):
-        for key , value in kwargs.items():
-            print ("{} == {}".format(key , value))
-            strKey     =   str(key)
-            self.insert_data_in_cell(strKey , value)
+    def create_header_file(self, *argsList):
+        # Example usage: create_header_file("TestSuite" , "Summary"  , "Test Case" , "Results")
+        key         =   0
+        for value in argsList:
+            print ("{}".format(value))
+            strKey     =   self.listAlpha[key]+"1"
+            self.insert_cell_header_data(strKey , value)
+            key +=1
+            
 
-    # insert data in specific cell
-    def insert_data_in_cell(self, cellName , data):
-        self.mySheet[cellName]          =   data
-        self.mySheet[cellName].border   =   self.thin_border
+    # insert data in header cell
+    def insert_cell_header_data(self, cellName , data):
+        # There is a 3 methods to call this function
+        # 1 :using full cell name example:   insert_cell_header_data("A1" , "data")
+        # 2 :using first string col name example:   insert_cell_header_data("A" , "data")
+        # 3 :using int cell name example:   insert_cell_header_data(1 , "data")
+
+        
+        strCelName  =   str(cellName)
+        if len(strCelName) == 1 and strCelName[0] in self.listAlpha:
+            cellNameKey =   strCelName+"1"
+        elif strCelName[0] in self.listAlpha and strCelName[1] in self.numberList:
+            cellNameKey =   strCelName
+        else:
+            key         =   cellName
+            cellNameKey =   self.listAlpha[key]+"1"
+            print (cellNameKey)
+        
+        self.mySheet[cellNameKey]              =   data
+        self.mySheet[cellNameKey].border       =   self.thin_border
+        self.mySheet[cellNameKey].fill         =   self.defaultFill
+        self.mySheet[cellNameKey].font         =   self.bold_font
+        self.mySheet[cellNameKey].alignment    =   self.center_aligned_text
         self.save_data_in_file()
+        
+    # insert data in specific cell
+    def insert_cell_data(self, cellName , data):
+        # insert data in specific cell
+        # The cellName can be
+        # complete name string  : like A1 , B5 
+        # row : col : like      1:5         22:14
+        # Example usage : ResultsObject.insert_cell_data("A5" , "OK")
+        #                 ResultsObject.insert_cell_data("1:5" , "OK")
+        # import : in the second way the numbere begin from 0
+        strCellName =   str(cellName)
+
+        if strCellName[0] in self.listAlpha:
+            self.mySheet[strCellName]       =   data
+        else:
+            arrKey                          =   strCellName.split(':')
+            firstKey                        =   int(arrKey[0])
+            secondKey                       =   int(arrKey[1]) + 1
+            cellData                        =   self.listAlpha[firstKey]+str(secondKey)
+            self.mySheet[cellData]          =   data
+        self.save_data_in_file()
+
+    # insert a data by col name or col value
+    def insert_col_data(self, cellName , data , appendData="False"):
+        # insert a data by col name or col value
+        # The cellName can be
+        # string  : like A , B
+        # integer : 1  ,   14 , 0
+        # Example usage : ResultsObject.insert_col_data("A" , "OK")
+        #                 ResultsObject.insert_col_data("1" , "OK")
+        # import : in the second way the numbere begin from 0
+        strCellName =   str(cellName)
+        if strCellName in self.listAlpha:
+            key             =   self.get_empty_cell(strCellName)
+        else:
+            strCellName     =   self.listAlpha[int(cellName)]
+            key             =   self.get_empty_cell(strCellName)
+
+        print (key)
+        
+        self.mySheet[key]   =   data
+        self.save_data_in_file()
+
+    # This function used to get the next cell to insert data
+    def get_empty_cell(self, cel):
+        strCel  =   str(cel)
+        Testkey     =   1
+        if len(strCel) == 1  and strCel in self.listAlpha:
+            celName =   strCel
+        elif strCel[0] in self.listAlpha and strCel[1] in self.numberList:
+            celName =   strCel[0]
+        else:
+            intCel  =   int(cel)
+            celName =   self.listAlpha[intCel]
+            celName =   celName
+        
+        while True:
+            celNameValue =   celName+str(Testkey)
+            if self.mySheet[celNameValue].value == None:
+                break
+            Testkey +=1
+        return celNameValue
+
+    #insert data by header name
+    def insert_conName_data(self, colNameData):
+        pass
+
 
     ################## FU Tests ##########
     ##  FU : Boot
@@ -153,8 +246,23 @@ if __name__ == "__main__":
     pathFolder      =   currentPath+"/RobotSagemCom/testLibrary/"
     firstFile       =   pathFolder+"testInPythonScript.xlsx"
     firstResults    =   Results(firstFile , "Results")
-    #keyHeader      =   {"A1":"First" , "B1" : "Second"}
+    firstResults.create_file()
 
+
+    #firstResults.insert_col_data('A' , 'Test col data')
+    #firstResults.insert_col_data(2 , 'Test col data')
+    #firstResults.insert_cell_data('1:2' , 'Test')
+    #firstResults.insert_cell_header_data("A1" , "data")
+    #firstResults.insert_cell_header_data("B" , "data")
+    #firstResults.insert_cell_header_data(2 , "data")
+    #keyHeader      =   {"A1":"First" , "B1" : "Second"}
+    # 1 :using full cell name example:   insert_cell_header_data("A1" , "data")
+    # 2 :using first string col name example:   insert_cell_header_data("A" , "data")
+    # 3 :using int cell name example:   insert_cell_header_data(1 , "data")
+    #firstResults.create_header_file("TestSuite" , "Summary"  , "Test Case" , "Results")
+
+    """
     firstResults.create_file()
     firstResults.create_fu_test_result_file()
-    #firstResults.create_header_file(A1="First" , B1="Second")
+    firstResults.create_header_file("First" , "Second" , "Third" ,"Fourth")
+    """
