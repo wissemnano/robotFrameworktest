@@ -40,8 +40,13 @@ class Results():
         self.center_aligned_text = Alignment(horizontal="center")
         self.listAlpha   =   string.ascii_uppercase
         self.numberList   =   ['0' , '1' , '2' , '3' , '4' , '5','6', '7' , '8' , '9']
+    
     #create or open file
     def create_file(self):
+        # This function used to 
+        # 1 : Create a new xlsx file if dosen't exist
+        # 2 : Initialise sheet 
+        
         #if file exist open it
         if os.path.isfile(self.fileName):
             print ("Open an Existing File")
@@ -53,7 +58,6 @@ class Results():
         #Get all sheet in the file
         sheetsNames =   myBook.sheetnames
         print (sheetsNames)
-
         # crate the specific sheet file
         if self.sheetName == None:
             mySheet = myBook.create_sheet("Results")
@@ -67,14 +71,11 @@ class Results():
             #create a new sheet file
             else:
                 mySheet = myBook.create_sheet(self.sheetName)
-
         #Delete default sheet name
         self.remove_sheet_by_name("Sheet" , myBook)
-
         # Create Sheet And Workbook
         self.mySheet    =   mySheet
         self.myBook     =   myBook
-
         #Save file
         self.save_data_in_file()
 
@@ -104,7 +105,6 @@ class Results():
             strKey     =   self.listAlpha[key]+"1"
             self.insert_cell_header_data(strKey , value)
             key +=1
-            
 
     # insert data in header cell
     def insert_cell_header_data(self, cellName , data):
@@ -112,8 +112,6 @@ class Results():
         # 1 :using full cell name example:   insert_cell_header_data("A1" , "data")
         # 2 :using first string col name example:   insert_cell_header_data("A" , "data")
         # 3 :using int cell name example:   insert_cell_header_data(1 , "data")
-
-        
         strCelName  =   str(cellName)
         if len(strCelName) == 1 and strCelName[0] in self.listAlpha:
             cellNameKey =   strCelName+"1"
@@ -123,7 +121,6 @@ class Results():
             key         =   cellName
             cellNameKey =   self.listAlpha[key]+"1"
             print (cellNameKey)
-        
         self.mySheet[cellNameKey]              =   data
         self.mySheet[cellNameKey].border       =   self.thin_border
         self.mySheet[cellNameKey].fill         =   self.defaultFill
@@ -141,7 +138,6 @@ class Results():
         #                 ResultsObject.insert_cell_data("1:5" , "OK")
         # import : in the second way the numbere begin from 0
         strCellName =   str(cellName)
-
         if strCellName[0] in self.listAlpha:
             self.mySheet[strCellName]       =   data
         else:
@@ -194,34 +190,18 @@ class Results():
         return celNameValue
 
     #insert data by header name
-    def insert_conName_data(self, colNameData):
-        pass
-
+    def insert_colName_data(self, colNameData , data):
+        for x in self.listAlpha:
+            colName     =   x+"1"
+            if self.mySheet[colName].value == colNameData:
+                break
+        self.insert_col_data(x , "OK")    
 
     ################## FU Tests ##########
     ##  FU : Boot
     ##  FU : Periodic Check
     ######################################
     # Create insert function in FU Test
-    def write_head_fu_test_file(self):
-        self.mySheet['A1']="TestSuite"
-        self.mySheet['B1']="TestCase"
-        self.mySheet['C1']="Summary"
-        #self.mySheet['D1']="Preconditions"
-        self.mySheet['D1']="Step"
-        #self.mySheet['F1']="ExpectedResults"
-        self.mySheet['E1']="Result"
-        self.mySheet['F1']="Comments"
-        #Set Border style , header Style
-        for header in self.mySheet['A1:F1']:
-            for col in header:
-                col.border      =   self.thin_border
-                col.fill        =   self.defaultFill
-                col.font        =   self.bold_font
-                col.alignment   =   self.center_aligned_text
-        self.save_data_in_file()
-
-
     def adjust_test_file(self):
         self.adjust_cell('A1' , 20)
         self.adjust_cell('B1' , 20)
@@ -229,14 +209,6 @@ class Results():
         self.adjust_cell('D1' , 45)
         self.adjust_cell('E1' , 15)
         self.adjust_cell('F1' , 45)
-
-    def create_fu_test_result_file(self):
-        self.write_head_fu_test_file()
-        self.adjust_test_file()
-        #self.save_data_in_file()
-
-    def insert_fu_result(self):
-        pass
 
 if __name__ == "__main__":
     currentPath     =   os.getcwd()
@@ -247,22 +219,8 @@ if __name__ == "__main__":
     firstFile       =   pathFolder+"testInPythonScript.xlsx"
     firstResults    =   Results(firstFile , "Results")
     firstResults.create_file()
-
+    firstResults.insert_colName_data("Results" , "Data")
 
     #firstResults.insert_col_data('A' , 'Test col data')
     #firstResults.insert_col_data(2 , 'Test col data')
     #firstResults.insert_cell_data('1:2' , 'Test')
-    #firstResults.insert_cell_header_data("A1" , "data")
-    #firstResults.insert_cell_header_data("B" , "data")
-    #firstResults.insert_cell_header_data(2 , "data")
-    #keyHeader      =   {"A1":"First" , "B1" : "Second"}
-    # 1 :using full cell name example:   insert_cell_header_data("A1" , "data")
-    # 2 :using first string col name example:   insert_cell_header_data("A" , "data")
-    # 3 :using int cell name example:   insert_cell_header_data(1 , "data")
-    #firstResults.create_header_file("TestSuite" , "Summary"  , "Test Case" , "Results")
-
-    """
-    firstResults.create_file()
-    firstResults.create_fu_test_result_file()
-    firstResults.create_header_file("First" , "Second" , "Third" ,"Fourth")
-    """
