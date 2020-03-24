@@ -20,7 +20,6 @@ class Results():
         # initialise same data
         self.fileName   =   fileName
         self.sheetName  =   sheetName
-        print ("Call Result Class")
         # config sheet file :
         # add same style
         self.bold_font      = Font(bold=True)
@@ -37,10 +36,17 @@ class Results():
             end_color='0cff0c',
             fill_type='solid'
             )
-        self.center_aligned_text = Alignment(horizontal="center")
-        self.listAlpha   =   string.ascii_uppercase
-        self.numberList   =   ['0' , '1' , '2' , '3' , '4' , '5','6', '7' , '8' , '9']
-    
+
+        self.redFill        = PatternFill(start_color='FF0000',
+            end_color='FF4500',
+            fill_type='solid'
+            )
+
+        self.center_aligned_text    = Alignment(horizontal="center")
+        self.listAlpha              =   string.ascii_uppercase
+        self.numberList             =   ['0' , '1' , '2' , '3' , '4' , '5','6', '7' , '8' , '9']
+        self.listPassTest           =   ['OK' , 'PASS']
+        self.listFailTest           =   ['NOK' , 'FAIL']
     #create or open file
     def create_file(self):
         # This function used to 
@@ -57,7 +63,6 @@ class Results():
             myBook = Workbook()
         #Get all sheet in the file
         sheetsNames =   myBook.sheetnames
-        print (sheetsNames)
         # crate the specific sheet file
         if self.sheetName == None:
             mySheet = myBook.create_sheet("Results")
@@ -96,12 +101,28 @@ class Results():
             self.mySheet.column_dimensions[self.mySheet[cellName].column_letter].width=cellSize
             self.save_data_in_file()
 
+    # This function used to adjust the size off all sheet cell by the headre
+    def adjust_cells_size(self, *listArgs):
+        # How to use it
+        # Pass all coll with the specific size
+        # example of usage:
+        # 1 : adjust_cells_size('A:20' , 'B:20' ,'C:30')
+        # 1 : adjust_cells_size('0:20' , '1:20' ,'2:30')
+        for x in listArgs:
+            cellName    =   x.split(':')
+            col         =   (cellName[0].upper()).strip()
+            if col in self.listAlpha:
+                index   =   col+"1"
+            else:
+                index   =   self.listAlpha[int(col)]+"1"
+            size        =   int(cellName[1].strip())
+            self.adjust_cell(index , size)
+
     # this function used to create the sheet header
     def create_header_file(self, *argsList):
         # Example usage: create_header_file("TestSuite" , "Summary"  , "Test Case" , "Results")
         key         =   0
         for value in argsList:
-            print ("{}".format(value))
             strKey     =   self.listAlpha[key]+"1"
             self.insert_cell_header_data(strKey , value)
             key +=1
@@ -146,6 +167,7 @@ class Results():
             secondKey                       =   int(arrKey[1]) + 1
             cellData                        =   self.listAlpha[firstKey]+str(secondKey)
             self.mySheet[cellData]          =   data
+            self.mySheet[cellData].border   =   self.thin_border
         self.save_data_in_file()
 
     # insert a data by col name or col value
@@ -163,10 +185,8 @@ class Results():
         else:
             strCellName     =   self.listAlpha[int(cellName)]
             key             =   self.get_empty_cell(strCellName)
-
-        print (key)
-        
         self.mySheet[key]   =   data
+        self.mySheet[key].border   =   self.thin_border
         self.save_data_in_file()
 
     # This function used to get the next cell to insert data
@@ -190,25 +210,83 @@ class Results():
         return celNameValue
 
     #insert data by header name
-    def insert_colName_data(self, colNameData , data):
-        for x in self.listAlpha:
-            colName     =   x+"1"
-            if self.mySheet[colName].value == colNameData:
-                break
-        self.insert_col_data(x , "OK")    
+    def insert_colName_data(self, indexColName , data):
+        #This function used to insert data into a col by the name of the head col
+        #For example inset data into a col Results
+        testInsert  =   False
+        if len(indexColName) == 1:
+            x           =   indexColName
+            testInsert  =   True
+        else:
+            # Get cell by header name
+            for x in self.listAlpha:
+                colName     =   x+"1"
+                if (self.mySheet[colName].value).lower() == indexColName.lower():
+                    testInsert  =   True
+                    break
+        if testInsert == True:
+            self.insert_col_data(x , data)    
 
-    ################## FU Tests ##########
-    ##  FU : Boot
-    ##  FU : Periodic Check
-    ######################################
-    # Create insert function in FU Test
-    def adjust_test_file(self):
-        self.adjust_cell('A1' , 20)
-        self.adjust_cell('B1' , 20)
-        self.adjust_cell('C1' , 20)
-        self.adjust_cell('D1' , 45)
-        self.adjust_cell('E1' , 15)
-        self.adjust_cell('F1' , 45)
+    def insert_col_result(self, indexColName , data):
+        #This function used to insert data into a col result
+        #inset data into a col Results
+        # Usage:
+        # 1 : insert_col_result(col_Result_Name , data) example :  insert_col_result('Results' , 'OK')
+        # 2 : insert_col_result(col_index_Name , data) example  insert_col_result('C' , 'OK')
+        # 2 : insert_col_result(col_index_value , data) example  insert_col_result(3 , 'OK')
+        testInsert  =   False
+        indexColName    =   str(indexColName)
+
+        if len(indexColName) == 1:
+            if indexColName in self.listAlpha:
+                x           =   indexColName
+            else:
+                x           =   self.listAlpha[int(indexColName)]
+            testInsert  =   True
+        else:
+            # Get cell by header name
+            for x in self.listAlpha:
+                colName     =   x+"1"
+                if (self.mySheet[colName].value).lower() == indexColName.lower():
+                    testInsert  =   True
+                    break
+        celKey  =   self.get_empty_cell(x)
+        if testInsert == True:
+            if data.upper() in self.listPassTest :
+                self.mySheet[celKey]            =   "OK"
+                self.mySheet[celKey].fill       =   self.greenFill
+            elif data in self.listFailTest :
+                self.mySheet[celKey]            =   "NOK"
+                self.mySheet[celKey].fill       =   self.redFill
+            self.mySheet[celKey].border         =   self.thin_border    
+        self.save_data_in_file()
+
+
+    def insert_row_data(self, *argListData):
+        # Insert row (many) data 
+        # usage:
+        # 1 : insert_row_data('data 1' , 'data 2' , 'data 3')
+        # 2 : insert_row_data('A:data 1' , 'B:data 2' , 'C:data 3')
+        # 3 : insert_row_data('0:data 1' , '1:data 2' , '2:data 3')
+        compt = 0
+        for target_list in argListData:
+            if target_list.find(':') != -1:
+                target_list     =   target_list.split(':')
+                key     =   target_list[0].strip()
+                if key in self.listAlpha:
+                    index = key
+                else:
+                    index = self.listAlpha[int(key)]
+                data    =   target_list[1]
+                print (index , data)
+                self.insert_col_data(index , data)
+            else :
+                data    =   target_list
+                index   =   self.listAlpha[compt]
+                print (index , data)
+                self.insert_col_data(index , data)
+                compt   +=1
+                
 
 if __name__ == "__main__":
     currentPath     =   os.getcwd()
@@ -219,8 +297,3 @@ if __name__ == "__main__":
     firstFile       =   pathFolder+"testInPythonScript.xlsx"
     firstResults    =   Results(firstFile , "Results")
     firstResults.create_file()
-    firstResults.insert_colName_data("Results" , "Data")
-
-    #firstResults.insert_col_data('A' , 'Test col data')
-    #firstResults.insert_col_data(2 , 'Test col data')
-    #firstResults.insert_cell_data('1:2' , 'Test')

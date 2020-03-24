@@ -2,23 +2,21 @@
 
 
 *** Variable ***
-${xlsxLibrary}                      LIBRARY\\Results.py
-${firstFile}                        testLibrary\\firstTestLib.xlsx
-${secondFile}                       testLibrary\\secondTestLib.xlsx
+${xlsxLibrary}                      C:\\Users\\MANSOURI\\Desktop\\workspace\\robotFrameworktest\\RobotSagemCom\\LIBRARY\\Results.py
+${firstFile}                        C:\\Users\\MANSOURI\\Desktop\\workspace\\robotFrameworktest\\RobotSagemCom\\testLibrary\\firstTestLib.xlsx
+${secondFile}                       C:\\Users\\MANSOURI\\Desktop\\workspace\\robotFrameworktest\\RobotSagemCom\\testLibrary\\secondTestLib.xlsx
+${firstLib}                         FirstLib
+${secondLib}                        SecondLib
+
 *** Test Case ***
 Example
-    Import Library                  ${xlsxLibrary}      ${firstFile}        WITH NAME   FirstLib
-    Log To Console                  Create object results
-    Log                             Create object results
+    Init Xlsx Result File           ${firstFile}                ${firstLib}
     
-    #Import Library                  ${xlsxLibrary}      ${secondFile}       WITH NAME   SecondLib
-    #Log To Console                  Create object results
-    #Log                             Create object results
-
-               
-
 *** Keywords ***
 
 Init Xlsx Result File
-    [Arguments]                     ${libName}
-    ${libName}.Create File          
+    [Arguments]                     ${fileName}                 ${firstLib}
+    Import Library                  ${xlsxLibrary}              ${fileName}        WITH NAME   ${firstLib}
+    Log To Console                  Create object results
+    Log                             Create object results
+    ${firstLib}                     Create File          
